@@ -1,10 +1,12 @@
 # BBBSCSMS Admin Web
 
-A comprehensive **Barangay Community Management System** administrative portal built with Flutter and Firebase. This web application enables barangay administrators to manage community reports, resident registrations, and communicate announcements efficiently.
+**Capstone/Thesis Project**
 
-## Overview
+A comprehensive **Barangay Community Management System** administrative portal built with Flutter. This web application enables barangay administrators to manage community reports, resident registrations, and communicate announcements efficiently.
 
-BBBSCSMS Admin Web is the administrative interface for the Barangay Community Management System. It provides barangay officials with tools to:
+## Project Overview
+
+BBBSCSMS Admin Web is a capstone project developed as the administrative interface for the Barangay Community Management System. It provides barangay officials with tools to:
 - Review and manage community reports
 - Verify and approve resident registrations
 - Visualize complaints and incidents on an interactive map
@@ -56,10 +58,6 @@ BBBSCSMS Admin Web is the administrative interface for the Barangay Community Ma
 
 - **Framework**: [Flutter](https://flutter.dev/) (Web)
 - **Language**: Dart
-- **Backend**: [Firebase](https://firebase.google.com/)
-  - Firestore Database
-  - Firebase Authentication
-  - Firebase Storage
 - **Database**: Supabase PostgreSQL
 - **UI Library**: Material Design 3
 - **Additional Libraries**:
@@ -110,16 +108,11 @@ lib/
    flutter pub get
    ```
 
-3. **Configure Firebase**
-   - Download your Firebase configuration file
-   - Place it in the appropriate location for web setup
-   - Update your Firebase project credentials
-
-4. **Configure Supabase**
+3. **Configure Supabase**
    - Get your Supabase project URL and anonymous key
    - Update the configuration in your initialization file
 
-5. **Run the application**
+4. **Run the application**
    ```bash
    flutter run -d chrome
    ```
@@ -193,8 +186,8 @@ flutter build linux
 ## API Integration
 
 The application integrates with:
-- **Firebase Authentication** - User authentication
 - **Supabase Database** - Report, resident, and announcement data
+- **Supabase Authentication** - User authentication
 - **Geolocation Services** - Map functionality
 
 ## Troubleshooting
@@ -205,55 +198,30 @@ The application integrates with:
 - Check Flutter doctor: `flutter doctor`
 
 ### Authentication Issues
-- Verify Firebase credentials
+- Verify Supabase credentials
 - Check Supabase connection
 - Ensure correct environment configuration
 
 ### Data Not Loading
 - Verify database connection
 - Check network connectivity
-- Review Firestore/Supabase rules
+- Review Supabase rules
 
-## Contributing
+## About This Project
 
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a pull request
+This is a **Capstone/Thesis Project** developed for academic purposes as part of a Computer Science curriculum. The BBBSCSMS system demonstrates practical application of web development, database design, real-time communication, and administrative system design.
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contact & Support
-
-For issues, questions, or suggestions:
-- Create an issue on GitHub
-- Contact the development team
-- Visit the project wiki for additional documentation
-
-## Roadmap
+## Future Enhancements
 
 - [ ] Advanced reporting features
 - [ ] Bulk resident registration import
 - [ ] Email notification system
 - [ ] SMS notifications
-- [ ] Mobile app admin panel
-- [ ] Advanced analytics with ML insights
-- [ ] Offline mode support
+- [ ] Advanced analytics
 - [ ] Dark mode UI
-
-## Acknowledgments
-
-- Flutter and Dart communities
-- Firebase platform
-- Supabase for backend infrastructure
-- All contributors and testers
 
 ---
 
 **Version**: 1.0.0  
 **Last Updated**: April 2026  
-**Status**: Active Development
+**Project Type**: Capstone/Thesis
