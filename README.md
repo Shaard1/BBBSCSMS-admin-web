@@ -209,7 +209,7 @@ The application integrates with:
 
 ## About This Project
 
-This is a **Capstone/Thesis Project** developed for academic purposes as part of a Computer Science curriculum. The BBBSCSMS system demonstrates practical application of web development, database design, real-time communication, and administrative system design.
+This is a **Capstone/Thesis Project** developed for academic purposes as part of a Bachelor of Science in Information Technology (BSIT) curriculum. The BBBSCSMS system demonstrates practical application of web development, database design, real-time communication, and administrative system design.
 
 ## Future Enhancements
 
