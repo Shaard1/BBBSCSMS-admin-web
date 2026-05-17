@@ -10,23 +10,36 @@ class AdminLoginScreen extends StatefulWidget {
 }
 
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
-  final adminAuthService = AdminAuthService();
+  final AdminAuthService _adminAuthService = AdminAuthService();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  bool loading = false;
-  bool isPasswordVisible = false;
+  bool _loading = false;
+  bool _isPasswordVisible = false;
 
-  Future login() async {
-    setState(() {
-      loading = true;
-    });
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Email and password are required.');
+      return;
+    }
+
+    setState(() => _loading = true);
 
     try {
-      final isAdmin = await adminAuthService.signInAsAdmin(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+      final bool isAdmin = await _adminAuthService.signInAsAdmin(
+        email: email,
+        password: password,
       );
 
       if (!mounted) return;
@@ -37,23 +50,20 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           MaterialPageRoute(builder: (_) => const AdminDashboard()),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Only admin accounts can log in to this web portal."),
-          ),
-        );
+        _showMessage('Only admin accounts can log in to this web portal.');
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      _showMessage(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => _loading = false);
+      }
     }
+  }
 
-    if (!mounted) return;
-    setState(() {
-      loading = false;
-    });
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -67,48 +77,68 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // ***** Login Header Start *****
               const Text(
                 "Barangay Admin Login",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              // ***** Login Header End *****
 
               const SizedBox(height: 30),
 
+              // ***** Login Fields Start *****
               TextField(
-                controller: emailController,
-                decoration: const InputDecoration(labelText: "Email"),
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(fontFamily: 'Inter'),
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  labelStyle: TextStyle(fontFamily: 'Inter'),
+                ),
               ),
 
               const SizedBox(height: 20),
 
               TextField(
-                controller: passwordController,
-                obscureText: !isPasswordVisible,
+                controller: _passwordController,
+                obscureText: !_isPasswordVisible,
+                style: const TextStyle(fontFamily: 'Inter'),
                 decoration: InputDecoration(
                   labelText: "Password",
+                  labelStyle: const TextStyle(fontFamily: 'Inter'),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      isPasswordVisible
+                      _isPasswordVisible
                           ? Icons.visibility_off
                           : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
-                        isPasswordVisible = !isPasswordVisible;
+                        _isPasswordVisible = !_isPasswordVisible;
                       });
                     },
                   ),
                 ),
               ),
+              // ***** Login Fields End *****
 
               const SizedBox(height: 30),
 
+              // ***** Login Button Start *****
               ElevatedButton(
-                onPressed: loading ? null : login,
-                child: loading
+                onPressed: _loading ? null : _login,
+                child: _loading
                     ? const CircularProgressIndicator()
-                    : const Text("Login"),
+                    : const Text(
+                        "Login",
+                        style: TextStyle(fontFamily: 'Inter'),
+                      ),
               ),
+              // ***** Login Button End *****
             ],
           ),
         ),

@@ -8,6 +8,8 @@ class Resident {
   final String gender;
   final String idType;
   final String idImage;
+  final String idImageFront;
+  final String idImageBack;
   final String profileImage;
   final String profileImageOriginal;
   final String status;
@@ -24,6 +26,8 @@ class Resident {
     required this.gender,
     required this.idType,
     required this.idImage,
+    required this.idImageFront,
+    required this.idImageBack,
     required this.profileImage,
     required this.profileImageOriginal,
     required this.status,
@@ -31,22 +35,38 @@ class Resident {
     required this.createdAt,
   });
 
+  static String _asString(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    return value.toString();
+  }
+
   factory Resident.fromJson(Map<String, dynamic> json) {
+    final legacyIdImage = _asString(json['id_image']);
+    final frontImage = _asString(json['id_image_front']).isEmpty
+        ? legacyIdImage
+        : _asString(json['id_image_front']);
+    final backImage = _asString(json['id_image_back']);
+
     return Resident(
-      id: json['id'].toString(),
-      fullName: json['full_name'] ?? '',
-      birthdate: json['birthdate']?.toString() ?? '',
-      address: json['address'] ?? '',
-      contactNumber: json['contact_number'] ?? '',
-      civilStatus: json['civil_status'] ?? '',
-      gender: json['gender'] ?? '',
-      idType: json['id_type'] ?? '',
-      idImage: json['id_image'] ?? '',
-      profileImage: json['profile_image'] ?? '',
-      profileImageOriginal: json['profile_image_original'] ?? '',
-      status: json['status'] ?? 'pending',
-      rejectionReason: json['rejection_reason'] ?? '',
-      createdAt: json['created_at']?.toString() ?? '',
+      id: _asString(json['id']),
+      fullName: _asString(json['full_name']),
+      birthdate: _asString(json['birthdate']),
+      address: _asString(json['address']),
+      contactNumber: _asString(json['contact_number']),
+      civilStatus: _asString(json['civil_status']),
+      gender: _asString(json['gender']),
+      idType: _asString(json['id_type']),
+      idImage: legacyIdImage,
+      idImageFront: frontImage,
+      idImageBack: backImage,
+      profileImage: _asString(json['profile_image']),
+      profileImageOriginal: _asString(json['profile_image_original']),
+      status: _asString(json['status']).isEmpty
+          ? 'pending'
+          : _asString(json['status']),
+      rejectionReason: _asString(json['rejection_reason']),
+      createdAt: _asString(json['created_at']),
     );
   }
 }

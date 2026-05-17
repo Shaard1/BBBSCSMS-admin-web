@@ -243,67 +243,65 @@ class _ResidentsScreenState extends State<ResidentsScreen> {
   }
 
   Widget _buildImagePreview(String title, String imageUrl) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          Container(
-            height: 220,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey.shade100,
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: imageUrl.trim().isEmpty
-                ? const Center(child: Text("No image uploaded"))
-                : InkWell(
-                    onTap: () => _showImageViewer(title, imageUrl),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) {
-                              return const Center(
-                                child: Text("Unable to load image"),
-                              );
-                            },
-                          ),
-                        ),
-                        Positioned(
-                          right: 8,
-                          top: 8,
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: const Icon(
-                              Icons.zoom_in,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        Container(
+          height: 220,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.grey.shade100,
           ),
-          if (imageUrl.trim().isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Text(
-              "Click image to zoom",
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-            ),
-          ],
+          clipBehavior: Clip.antiAlias,
+          child: imageUrl.trim().isEmpty
+              ? const Center(child: Text("No image uploaded"))
+              : InkWell(
+                  onTap: () => _showImageViewer(title, imageUrl),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) {
+                            return const Center(
+                              child: Text("Unable to load image"),
+                            );
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: const Icon(
+                            Icons.zoom_in,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+        if (imageUrl.trim().isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Text(
+            "Click image to zoom",
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+          ),
         ],
-      ),
+      ],
     );
   }
 
@@ -434,11 +432,65 @@ class _ResidentsScreenState extends State<ResidentsScreen> {
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
+        final normalizedStatus = _normalizedStatus(resident);
+        final statusLabel = _statusLabel(resident);
+        final statusBg = normalizedStatus == "approved"
+            ? const Color(0xFFE8F5EE)
+            : normalizedStatus == "flagged"
+            ? const Color(0xFFFDECEC)
+            : const Color(0xFFF6EFD9);
+        final statusFg = normalizedStatus == "approved"
+            ? const Color(0xFF1F7A45)
+            : normalizedStatus == "flagged"
+            ? const Color(0xFFB3261E)
+            : const Color(0xFF9B6A00);
+
+        Widget detailTile(String label, String value) {
+          return Container(
+            width: 430,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFE7ECF3)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF6A7280),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  _displayValue(value),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1F2937),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 950, maxHeight: 760),
-            child: Padding(
+            constraints: const BoxConstraints(maxWidth: 980, maxHeight: 780),
+            child: Container(
               padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: const Color(0xFFE7ECF3)),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -451,23 +503,46 @@ class _ResidentsScreenState extends State<ResidentsScreen> {
                             Text(
                               resident.fullName,
                               style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 38,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF1F2937),
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Text(
                               showActionButtons
                                   ? "Review resident registration details before approval."
                                   : "View resident registration details.",
-                              style: TextStyle(color: Colors.grey.shade700),
+                              style: const TextStyle(
+                                color: Color(0xFF64748B),
+                                fontSize: 15,
+                              ),
                             ),
                           ],
                         ),
                       ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: statusBg,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          statusLabel,
+                          style: TextStyle(
+                            color: statusFg,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
                       IconButton(
                         onPressed: () => Navigator.pop(dialogContext),
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(Icons.close, color: Color(0xFF4B5563)),
                       ),
                     ],
                   ),
@@ -479,97 +554,56 @@ class _ResidentsScreenState extends State<ResidentsScreen> {
                         children: [
                           Wrap(
                             spacing: 24,
-                            runSpacing: 10,
+                            runSpacing: 12,
                             children: [
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Submitted on",
-                                  _formatDate(resident.createdAt),
-                                ),
+                              detailTile(
+                                "Submitted on",
+                                _formatDate(resident.createdAt),
                               ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Status",
-                                  resident.status,
-                                ),
-                              ),
+                              detailTile("Status", resident.status),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
                           Wrap(
                             spacing: 24,
-                            runSpacing: 10,
+                            runSpacing: 12,
                             children: [
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Full name",
-                                  resident.fullName,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Birthdate",
-                                  _formatDate(resident.birthdate),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Gender",
-                                  resident.gender,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Civil status",
-                                  resident.civilStatus,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Address",
-                                  resident.address,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Contact number",
-                                  resident.contactNumber,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "ID type",
-                                  resident.idType,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 420,
-                                child: _buildDetailItem(
-                                  "Rejection reason",
-                                  resident.rejectionReason,
-                                ),
-                              ),
+                              detailTile("Full name", resident.fullName),
+                              detailTile("Birthdate", _formatDate(resident.birthdate)),
+                              detailTile("Gender", resident.gender),
+                              detailTile("Civil status", resident.civilStatus),
+                              detailTile("Address", resident.address),
+                              detailTile("Contact number", resident.contactNumber),
+                              detailTile("ID type", resident.idType),
+                              detailTile("Rejection reason", resident.rejectionReason),
                             ],
                           ),
                           const SizedBox(height: 20),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
                             children: [
-                              _buildImagePreview(
-                                "Profile image",
-                                profileImageForReview,
+                              SizedBox(
+                                width: 290,
+                                child: _buildImagePreview(
+                                  "Profile image",
+                                  profileImageForReview,
+                                ),
                               ),
-                              const SizedBox(width: 16),
-                              _buildImagePreview("ID image", resident.idImage),
+                              SizedBox(
+                                width: 290,
+                                child: _buildImagePreview(
+                                  "ID image (Front)",
+                                  resident.idImageFront,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 290,
+                                child: _buildImagePreview(
+                                  "ID image (Back)",
+                                  resident.idImageBack,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -582,13 +616,20 @@ class _ResidentsScreenState extends State<ResidentsScreen> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext),
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFF64748B),
+                        ),
                         child: const Text("Close"),
                       ),
                       if (showActionButtons) ...[
                         const SizedBox(width: 8),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
+                            backgroundColor: const Color(0xFFDC2626),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                           onPressed: () async {
                             Navigator.pop(dialogContext);
@@ -598,6 +639,13 @@ class _ResidentsScreenState extends State<ResidentsScreen> {
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF006CBF),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           onPressed: () async {
                             Navigator.pop(dialogContext);
                             final shouldApprove = await _confirmApproveResident(
